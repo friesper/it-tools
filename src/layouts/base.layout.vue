@@ -60,7 +60,7 @@ const tools = computed<ToolCategory[]>(() => [
         <CollapsibleToolMenu :tools-by-category="tools" />
         <n-modal v-model:show="showModal">
           <n-card style="width: 600px" title="" transform-origin="center" :bordered="false" size="huge" role="dialog" aria-modal="true">
-            <img src="/src/assets/WeChatIMG39.jpg" style="width: 500px;height: 500px;"/>
+            <img src="@/assets/WeChatIMG39.jpg" style="width: 500px;height: 500px;"/>
           </n-card>
         </n-modal>
         <div class="footer">
