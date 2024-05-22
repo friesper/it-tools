@@ -25,12 +25,6 @@ const { t } = useI18n();
             :aria-label="$t('home.follow.githubRepository')"
           >GitHub</a>
           {{ $t('home.follow.p2') }}
-          <a
-            href="https://twitter.com/ittoolsdottech"
-            rel="noopener"
-            target="_blank"
-            :aria-label="$t('home.follow.twitterAccount')"
-          >Twitter</a>.
           {{ $t('home.follow.thankYou') }}
           <n-icon :component="Heart" />
         </ColoredCard>

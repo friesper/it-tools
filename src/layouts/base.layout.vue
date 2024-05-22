@@ -14,20 +14,24 @@ import type { ToolCategory } from '@/tools/tools.types';
 import { useToolStore } from '@/tools/tools.store';
 import { useTracker } from '@/modules/tracker/tracker.services';
 import CollapsibleToolMenu from '@/components/CollapsibleToolMenu.vue';
-
+import { defineComponent, ref } from 'vue'
 const themeVars = useThemeVars();
 const styleStore = useStyleStore();
 const version = config.app.version;
 const commitSha = config.app.lastCommitSha.slice(0, 7);
-
+const showModal = ref(false)
 const { tracker } = useTracker();
 const { t } = useI18n();
 
 const toolStore = useToolStore();
 const { favoriteTools, toolsByCategory } = storeToRefs(toolStore);
-
+const handleClick = () => {
+    showModal.value = true
+    }
 const tools = computed<ToolCategory[]>(() => [
-  ...(favoriteTools.value.length > 0 ? [{ name: t('tools.categories.favorite-tools'), components: favoriteTools.value }] : []),
+  ...(favoriteTools.value.length > 0
+    ? [{ name: t('tools.categories.favorite-tools'), components: favoriteTools.value }]
+    : []),
   ...toolsByCategory.value,
 ]);
 </script>
@@ -38,13 +42,9 @@ const tools = computed<ToolCategory[]>(() => [
       <RouterLink to="/" class="hero-wrapper">
         <HeroGradient class="gradient" />
         <div class="text-wrapper">
-          <div class="title">
-            IT - TOOLS
-          </div>
+          <div class="title">IT - TOOLS</div>
           <div class="divider" />
-          <div class="subtitle">
-            {{ $t('home.subtitle') }}
-          </div>
+          <div class="subtitle">{{ $t('home.subtitle') }}</div>
         </div>
       </RouterLink>
 
@@ -58,14 +58,15 @@ const tools = computed<ToolCategory[]>(() => [
         </div>
 
         <CollapsibleToolMenu :tools-by-category="tools" />
-
+        <n-modal v-model:show="showModal">
+          <n-card style="width: 600px" title="" transform-origin="center" :bordered="false" size="huge" role="dialog" aria-modal="true">
+            <img src="../assets/WeChatIMG39.jpg" style="width: 500px;height: 500px;"/>
+          </n-card>
+        </n-modal>
         <div class="footer">
           <div>
             IT-Tools
-
-            <c-link target="_blank" rel="noopener" :href="`https://github.com/CorentinTh/it-tools/tree/v${version}`">
-              v{{ version }}
-            </c-link>
+            <c-link target="_blank" rel="noopener" :href="`https://github.com/CorentinTh/it-tools/tree/v${version}`">v{{ version }}</c-link>
 
             <template v-if="commitSha && commitSha.length > 0">
               -
@@ -74,16 +75,12 @@ const tools = computed<ToolCategory[]>(() => [
                 rel="noopener"
                 type="primary"
                 :href="`https://github.com/CorentinTh/it-tools/tree/${commitSha}`"
-              >
-                {{ commitSha }}
-              </c-link>
+              >{{ commitSha }}</c-link>
             </template>
           </div>
           <div>
             © {{ new Date().getFullYear() }}
-            <c-link target="_blank" rel="noopener" href="https://github.com/CorentinTh">
-              Corentin Thomasset
-            </c-link>
+            <c-link target="_blank" rel="noopener" href="https://github.com/CorentinTh">Corentin Thomasset</c-link>
           </div>
         </div>
       </div>
@@ -123,12 +120,11 @@ const tools = computed<ToolCategory[]>(() => [
         <c-tooltip position="bottom" :tooltip="$t('home.support')">
           <c-button
             round
-            href="https://www.buymeacoffee.com/cthmsst"
             rel="noopener"
             target="_blank"
             class="support-button"
             :bordered="false"
-            @click="() => tracker.trackEvent({ eventName: 'Support button clicked' })"
+            @click="handleClick"
           >
             {{ $t('home.buyMeACoffee') }}
             <NIcon v-if="!styleStore.isSmallScreen" :component="Heart" ml-2 />
